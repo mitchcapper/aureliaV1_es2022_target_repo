@@ -1,0 +1,50 @@
+<template>
+	<a href="https://page.thepages.workers.dev/aurelia_cry">Code Gen Diff</a> <br/><br/>
+	<div>
+	  test binding:
+  
+	  <input type="text" value.bind="htmlBoundField" />
+	  <button type="button" click.trigger="increment()">Increment fields</button>
+  
+	  <h3>Diag log</h3>
+	  <textarea
+		style="width: 600px; height: 400px; display: block"
+		id="logarea"
+	  ></textarea>
+	  <h4>Repro steps:</h4>
+    when page loads if you hit increment field once and then add an 8 to the end of the input box is:
+    <h3>Good Output</h3>
+	  <pre>
+htmlBoundFieldChanged from: undefined to: 1234
+classOnlyFieldChanged from: undefined to: 6789
+Attached
+Increment called
+htmlBoundFieldChanged from: 1234 to: 1235
+classOnlyFieldChanged from: 6789 to: 6790
+htmlBoundFieldChanged from: 1235 to: 1235
+htmlBoundFieldChanged from: 1235 to: 12358
+      
+	</div>
+  The dev console will show:
+  <pre>
+testcomp.ts:7 undefined
+testcomp.ts:8 undefined
+testcomp.ts:9 {enumerable: true, configurable: false, get: ƒ, set: ƒ}
+testcomp.ts:10 {enumerable: true, configurable: false, get: ƒ, set: ƒ}
+  </pre>
+  
+  <h3>Bad output (tsconfig.json target set to: ES2022 rather than ES2021):</h3>
+  <pre>
+Attached
+Increment called
+  </pre>
+  The dev console will show:
+  <pre>
+testcomp.ts:7 {value: 6789, writable: true, enumerable: true, configurable: true}
+testcomp.ts:8 {enumerable: true, configurable: true, get: ƒ, set: ƒ}
+testcomp.ts:9 {enumerable: true, configurable: false, get: ƒ, set: ƒ}
+testcomp.ts:10 {enumerable: true, configurable: false, get: ƒ, set: ƒ}
+  </pre>
+  Even with bad the input box will get the change events as it binds after the class is created
+  </template>
+  
